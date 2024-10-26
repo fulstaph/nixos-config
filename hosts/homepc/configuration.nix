@@ -97,7 +97,7 @@ in
   users.users.fulstaph = {
     isNormalUser = true;
     description = "George Kvaratskhelia";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [
       kdePackages.kate
       betterbird
@@ -106,12 +106,16 @@ in
       vlc
       vscode
       telegram-desktop
+      obsidian
       qbittorrent
       alacritty
       btop
       go
       python3
       vscode
+      ghc
+      cabal-install
+      stack
     ];
   };
 
@@ -163,6 +167,9 @@ in
   # };
 
   # List services that you want to enable:
+
+  # Enable Docker service
+  virtualisation.docker.enable = true;
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;

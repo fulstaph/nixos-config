@@ -1,4 +1,7 @@
 { config, pkgs, ... }:
 {
-  programs.nushell.enable = true;
+  programs.nushell = {
+    enable = true;
+    configFile = ./config.nu;
+  };
 }
