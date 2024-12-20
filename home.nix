@@ -5,6 +5,7 @@
     ./shells/starship.nix
     ./shells/nu.nix
     ./shells/tmux.nix
+    ./shells/zellij.nix
     
     ./cli/bat.nix
     ./cli/eza.nix
@@ -32,21 +33,18 @@
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
-    # # Adds the 'hello' command to your environment. It prints a friendly
-    # # "Hello, world!" when run.
+    # Adds the 'hello' command to your environment. It prints a friendly
+    # "Hello, world!" when run.
     hello
 
-    # # It is sometimes useful to fine-tune packages, for example, by applying
-    # # overrides. You can do that directly here, just don't forget the
-    # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
-    # # fonts?
-    (pkgs.nerdfonts.override { 
-      fonts = [ "FantasqueSansMono" "JetBrainsMono" "FiraCode" ]; 
-    })
+    # Install Nerd Fonts with a limited number of fonts
+    pkgs.nerd-fonts.fantasque-sans-mono
+    pkgs.nerd-fonts.jetbrains-mono
+    pkgs.nerd-fonts.fira-code
 
-    # # You can also create simple shell scripts directly inside your
-    # # configuration. For example, this adds a command 'my-hello' to your
-    # # environment:
+    # You can also create simple shell scripts directly inside your
+    # configuration. For example, this adds a command 'my-hello' to your
+    # environment:
     # (pkgs.writeShellScriptBin "my-hello" ''
     #   echo "Hello, ${config.home.username}!"
     # '')
@@ -65,6 +63,12 @@
     #   org.gradle.console=verbose
     #   org.gradle.daemon.idletimeout=3600000
     # '';
+
+    # Deploy userChrome.css for Firefox
+    "/home/fulstaph/.mozilla/firefox/fulstaph/chrome/userChrome.css".text = ''
+      /* Hide the horizontal tab bar */
+      #TabsToolbar { visibility: collapse !important; }
+      '';
   };
 
   # Home Manager can also manage your environment variables through

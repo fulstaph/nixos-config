@@ -16,6 +16,7 @@ in
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.kernelModules = [ "amdgpu" ];
 
   networking.hostName = "homepc"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -50,20 +51,19 @@ in
     LC_TIME = "en_AU.UTF-8";
   };
 
-  # Enable the X11 windowing system.
-  # You can disable this if you're only using the Wayland session.
-  services.xserver.enable = true;
+  # Enable the driver
+  services.xserver.videoDrivers = [ "amdgpu" ];
+  hardware.enableAllFirmware = true;
+  hardware.opengl.enable = true;
+  # programs.vulkan-loader.enable = true;
 
-  # Enable the proprietary Nvidia driver
-  services.xserver.videoDrivers = [ "nvidia" ];
-  hardware.nvidia = {
-    modesetting.enable = true;
-    open = false;
-  };
 
   # Enable the KDE Plasma Desktop Environment.
+  services.xserver.enable = true;
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
+  services.displayManager.defaultSession = "plasma";
+  services.displayManager.sddm.wayland.enable = true;
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -97,10 +97,9 @@ in
   users.users.fulstaph = {
     isNormalUser = true;
     description = "George Kvaratskhelia";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" "vboxusers"];
     packages = with pkgs; [
       kdePackages.kate
-      betterbird
       discord
       chromium
       vlc
@@ -116,6 +115,23 @@ in
       ghc
       cabal-install
       stack
+      virtualbox
+      distrobox
+      bitwig-studio
+      lutris
+      wine
+      winetricks
+      # latex packages
+      texlive.combined.scheme-full
+      biber
+      pandoc
+      
+      # disk utility
+      gparted
+
+      # edge for work?
+      # TODO: delete
+      microsoft-edge
     ];
   };
 
@@ -133,18 +149,21 @@ in
     dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
   };
 
+  programs.partition-manager.enable = true;
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
-
-  #nixpkgs.config.packageOverrides = pkgs: {
-  #  zed-editor = nixos-unstable.zed-editor;
-  #};
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
+     vulkan-loader
+     vulkan-tools
+     mesa
+     ntfs3g
+     udisks2
      neovim
      zsh
      tmux
@@ -156,6 +175,7 @@ in
      cargo
      rust-analyzer
      home-manager
+     wireguard-tools
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -167,6 +187,9 @@ in
   # };
 
   # List services that you want to enable:
+
+  # Enable Flatpak
+  services.flatpak.enable = true;
 
   # Enable Docker service
   virtualisation.docker.enable = true;
