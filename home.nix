@@ -1,4 +1,8 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
+
+let
+  inNiri = builtins.getEnv "XDG_SESSION_DESKTOP" == "niri";
+in
 {
   imports = [
     ./shells/sh.nix 
@@ -15,6 +19,46 @@
     ./applications/terminals/alacritty.nix
     ./applications/editors/helix.nix
   ];
+
+  # Enable mako and waybar only when in Niri 
+  services.mako.enable = inNiri;
+
+  programs.waybar = lib.mkIf inNiri {
+    enable = true;
+    settings = {
+      mainBar = {
+        layer = "top";
+        position = "top";
+        modules-left = [ "workspaces" ];
+        modules-center = [ "clock" ];
+        modules-right = [ "pulseaudio" "network" "battery" "tray" ];
+      };
+    };
+  };
+
+  # Wallpaper via swww (when using Niri)
+  systemd.user.services.swww = lib.mkIf inNiri {
+    Unit.Description = "swww daemon";
+    Service = {
+      ExecStart = "${pkgs.swww}/bin/swww-daemon";
+      Restart = "on-failure";
+    };
+    Install.WantedBy = [ "graphical-session.target" ];
+  };
+
+  # xdg.configFile."niri/config.kdl".text = lib.mkIf inNiri ''
+  #   startup [
+  #     "swww img ~/Pictures/wallpaper.jpg"
+  #     "mako"
+  #     "waybar"
+  #   ]
+  # '';
+
+  # xdg.configFile = lib.mkIf inNiri {
+  #   "niri/config.kdl".source = ./niri/config.kdl;
+  # };
+
+  xdg.configFile."niri/config.kdl".source = ./niri/config.kdl;
 
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
@@ -36,6 +80,10 @@
     # Adds the 'hello' command to your environment. It prints a friendly
     # "Hello, world!" when run.
     hello
+
+    wofi
+    # rofi-wayland
+    kitty
 
     # Install Nerd Fonts with a limited number of fonts
     pkgs.nerd-fonts.fantasque-sans-mono

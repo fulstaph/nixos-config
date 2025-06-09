@@ -4,11 +4,13 @@
 
 { config, pkgs, ... }:
 
+let
+  unstable = import <nixos-unstable> {};
+in
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./applications/steam.nix
     ];
 
   # Bootloader.
@@ -19,7 +21,7 @@
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # zsh enable
-  environment.shells = with pkgs; [ zsh ];
+  environment.shells = with pkgs; [ zsh nushell ];
   users.defaultUserShell = pkgs.zsh;
   programs.zsh.enable = true;
 
@@ -70,8 +72,7 @@
   services.printing.enable = true;
 
   # Enable sound with pipewire.
-  sound.enable = true;
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -102,48 +103,98 @@
     description = "George Kvaratskhelia";
     extraGroups = [ "networkmanager" "wheel" "docker"];
     packages = with pkgs; [
+      chromium
       firefox
-      kate
       neovim
       vscode
       spotify
       telegram-desktop
       qbittorrent
+      obsidian
       vlc
       alacritty
       discord
-      # steam
       htop
+      btop
       mattermost
       tmux
-      betterbird
-      bitwarden
-    #  thunderbird
-
-     # programming languages
-     go
-     rustup
-     cargo
-     # rust
-     python3
+      virtualbox
+      distrobox
+      bitwig-studio
+      lutris
+      wine
+      winetricks
+      # programming languages
+      go
+      rustup
+      cargo
+      # rust
+      python3
     ];
+  };
+
+  # Install firefox.
+  programs.firefox = {
+    enable = true;
+    package = pkgs.firefox;
+    nativeMessagingHosts.packages = [ pkgs.firefoxpwa ];
+  };
+  
+  # Enable Steam
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
   };
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
+
+  programs.niri.enable = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
+
+    # niri specific packages
+    niri
+    waybar
+    mako
+    rofi-wayland
+    swww
+    kitty
+    wl-clipboard
+    # end niri
+
     vim
     git
     tmux
     zsh
     fastfetch
+    gcc
+    rust-analyzer
+    nixd
+
+    # local kubernetes development
+    kube3d
+    kubectl
+    helm
+
+    zed-editor
+    jetbrains-toolbox
     pkgs.home-manager
   ];
+
+  # Enable Flatpak
+  services.flatpak.enable = true;
+
+  # Enable the Bluetooth service
+  services.blueman.enable = true; # Optional GUI for managing Bluetooth (GTK)
+
+  hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -156,7 +207,7 @@
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  services.openssh.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
@@ -170,6 +221,6 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "23.11"; # Did you read the comment?
-
+  system.stateVersion = "24.11"; # Did you read the comment?
 }
+
