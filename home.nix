@@ -5,12 +5,12 @@ let
 in
 {
   imports = [
-    ./shells/sh.nix 
+    ./shells/sh.nix
     ./shells/starship.nix
     ./shells/nu.nix
     ./shells/tmux.nix
     ./shells/zellij.nix
-    
+
     ./cli/bat.nix
     ./cli/eza.nix
     ./cli/git.nix
@@ -20,10 +20,10 @@ in
     ./applications/editors/helix.nix
   ];
 
-  # Enable mako and waybar only when in Niri 
-  services.mako.enable = inNiri;
+  # Enable mako and waybar only when in Niri
+  services.mako.enable = true;
 
-  programs.waybar = lib.mkIf inNiri {
+  programs.waybar = { # lib.mkIf inNiri {
     enable = true;
     settings = {
       mainBar = {
@@ -36,15 +36,40 @@ in
     };
   };
 
-  # Wallpaper via swww (when using Niri)
-  systemd.user.services.swww = lib.mkIf inNiri {
-    Unit.Description = "swww daemon";
-    Service = {
-      ExecStart = "${pkgs.swww}/bin/swww-daemon";
-      Restart = "on-failure";
+  # systemd.user.services = {
+  #   waybar = {
+  #     Unit = {
+  #       Description = "Waybar";
+  #       PartOf = [ "graphical-session.target" ];
+  #       After = [ "mako.service" ];
+  #     };
+  #     Service = {
+  #       ExecStart = "${pkgs.waybar}/bin/waybar";
+  #       Restart = "on-failure";
+  #       RestartSec = "5s";
+  #     };
+  #     Install.WantedBy = [ "graphical-session.target" ];
+  #   };
+  # }
+
+  programs.swaylock = {
+    enable = true;
+    settings = {
+        color = "000000";
+        show-failed-attempts = true;
+        daemonize = true;
     };
-    Install.WantedBy = [ "graphical-session.target" ];
   };
+
+  # Wallpaper via swww (when using Niri)
+  # systemd.user.services.swww = { # lib.mkIf inNiri {
+  #   Unit.Description = "swww daemon";
+  #   Service = {
+  #     ExecStart = "${pkgs.swww}/bin/swww-daemon";
+  #     Restart = "on-failure";
+  #   };
+  #   Install.WantedBy = [ "graphical-session.target" ];
+  # };
 
   # xdg.configFile."niri/config.kdl".text = lib.mkIf inNiri ''
   #   startup [
@@ -81,8 +106,17 @@ in
     # "Hello, world!" when run.
     hello
 
+    swaylock
     wofi
+    mako
     # rofi-wayland
+    swww
+    wl-clipboard
+    playerctl
+    pavucontrol
+    # libsForQt5.qt5.qtgraphicaleffects
+    # libappindicator
+
     kitty
 
     # Install Nerd Fonts with a limited number of fonts
@@ -136,7 +170,8 @@ in
   #
   home.sessionVariables = {
     EDITOR = "nvim";
-    SHELL = "${pkgs.nushell}/bin/nu";
+    # SHELL = "${pkgs.nushell}/bin/nu";
+    SHELL = "${pkgs.zsh}/bin/zsh";
   };
 
   # Let Home Manager install and manage itself.

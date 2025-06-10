@@ -152,6 +152,8 @@ in
 
   programs.niri.enable = true;
 
+  # programs.xwayland.enable = true;
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -166,6 +168,11 @@ in
     swww
     kitty
     wl-clipboard
+    xdg-desktop-portal-gtk
+    xdg-desktop-portal-gnome
+    kdePackages.polkit-kde-agent-1
+    xwayland-satellite
+    gnome-keyring
     # end niri
 
     vim
