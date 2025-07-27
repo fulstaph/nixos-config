@@ -20,71 +20,6 @@ in
     ./applications/editors/helix.nix
   ];
 
-  # Enable mako and waybar only when in Niri
-  services.mako.enable = true;
-
-  programs.waybar = { # lib.mkIf inNiri {
-    enable = true;
-    settings = {
-      mainBar = {
-        layer = "top";
-        position = "top";
-        modules-left = [ "workspaces" ];
-        modules-center = [ "clock" ];
-        modules-right = [ "pulseaudio" "network" "battery" "tray" ];
-      };
-    };
-  };
-
-  # systemd.user.services = {
-  #   waybar = {
-  #     Unit = {
-  #       Description = "Waybar";
-  #       PartOf = [ "graphical-session.target" ];
-  #       After = [ "mako.service" ];
-  #     };
-  #     Service = {
-  #       ExecStart = "${pkgs.waybar}/bin/waybar";
-  #       Restart = "on-failure";
-  #       RestartSec = "5s";
-  #     };
-  #     Install.WantedBy = [ "graphical-session.target" ];
-  #   };
-  # }
-
-  programs.swaylock = {
-    enable = true;
-    settings = {
-        color = "000000";
-        show-failed-attempts = true;
-        daemonize = true;
-    };
-  };
-
-  # Wallpaper via swww (when using Niri)
-  # systemd.user.services.swww = { # lib.mkIf inNiri {
-  #   Unit.Description = "swww daemon";
-  #   Service = {
-  #     ExecStart = "${pkgs.swww}/bin/swww-daemon";
-  #     Restart = "on-failure";
-  #   };
-  #   Install.WantedBy = [ "graphical-session.target" ];
-  # };
-
-  # xdg.configFile."niri/config.kdl".text = lib.mkIf inNiri ''
-  #   startup [
-  #     "swww img ~/Pictures/wallpaper.jpg"
-  #     "mako"
-  #     "waybar"
-  #   ]
-  # '';
-
-  # xdg.configFile = lib.mkIf inNiri {
-  #   "niri/config.kdl".source = ./niri/config.kdl;
-  # };
-
-  xdg.configFile."niri/config.kdl".source = ./niri/config.kdl;
-
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "fulstaph";
@@ -102,21 +37,6 @@ in
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
-    # Adds the 'hello' command to your environment. It prints a friendly
-    # "Hello, world!" when run.
-    hello
-
-    swaylock
-    wofi
-    mako
-    # rofi-wayland
-    swww
-    wl-clipboard
-    playerctl
-    pavucontrol
-    # libsForQt5.qt5.qtgraphicaleffects
-    # libappindicator
-
     kitty
 
     # Install Nerd Fonts with a limited number of fonts
@@ -130,6 +50,8 @@ in
     # (pkgs.writeShellScriptBin "my-hello" ''
     #   echo "Hello, ${config.home.username}!"
     # '')
+
+    vscode
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
