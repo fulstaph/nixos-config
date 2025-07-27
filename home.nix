@@ -36,8 +36,16 @@ in
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
+  programs.alacritty.enable = true; # Super+T in the default setting (terminal)
+  programs.fuzzel.enable = true; # Super+D in the default setting (app launcher)
+  programs.swaylock.enable = true; # Super+Alt+L in the default setting (screen locker)
+  programs.waybar.enable = true; # launch on startup in the default setting (bar)
+  services.mako.enable = true; # notification daemon
+  services.swayidle.enable = true; # idle management daemon
+  services.polkit-gnome.enable = true; # polkit
   home.packages = with pkgs; [
     kitty
+    swaybg
 
     # Install Nerd Fonts with a limited number of fonts
     pkgs.nerd-fonts.fantasque-sans-mono
@@ -95,6 +103,19 @@ in
     # SHELL = "${pkgs.nushell}/bin/nu";
     SHELL = "${pkgs.zsh}/bin/zsh";
   };
+
+   programs.nvf = {
+    enable = true;
+    settings = {
+      # vim.viAlias = false;
+      # vim.vimAlias = true;
+      vim.lsp = {
+        enable = true;
+      };
+    };
+  };
+
+  xdg.configFile."niri/config.kdl".source = ./config.kdl;
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;

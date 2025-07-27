@@ -5,12 +5,14 @@
     nixpkgs.url = "nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    nvf.url = "github:notashelf/nvf";
   };
 
   outputs = {
     self,
     nixpkgs,
     home-manager,
+    nvf,
     ...
   }: let
     lib = nixpkgs.lib;
@@ -37,7 +39,10 @@
     homeConfigurations = {
       fulstaph = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        modules = [./home.nix];
+        modules = [
+          nvf.homeManagerModules.default
+          ./home.nix
+        ];
       };
     };
   };
