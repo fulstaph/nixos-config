@@ -20,7 +20,7 @@ in {
     shellAliases = myShellAliases;
     initExtra = ''
       # Ensure system packages take precedence
-      export PATH=/run/current-system/sw/bin:$PATH
+      # export PATH=/run/current-system/sw/bin:$PATH
     '';
   };
 }

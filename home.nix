@@ -7,7 +7,7 @@ in
   imports = [
     ./shells/sh.nix
     ./shells/starship.nix
-    ./shells/nu.nix
+    # ./shells/nu.nix
     ./shells/tmux.nix
     ./shells/zellij.nix
 
@@ -18,6 +18,8 @@ in
     ./applications/terminals/wezterm.nix
     ./applications/terminals/alacritty.nix
     ./applications/editors/helix.nix
+
+    # ./applications/steam.nix
   ];
 
   # Home Manager needs a bit of information about you and the paths it should
@@ -34,6 +36,8 @@ in
   # release notes.
   home.stateVersion = "24.05"; # Please read the comment before changing.
 
+  services.blueman-applet.enable = true;
+
   # The home.packages option allows you to install Nix packages into your
   # environment.
   programs.alacritty.enable = true; # Super+T in the default setting (terminal)
@@ -46,6 +50,8 @@ in
   home.packages = with pkgs; [
     kitty
     swaybg
+    brightnessctl
+    playerctl
 
     # Install Nerd Fonts with a limited number of fonts
     pkgs.nerd-fonts.fantasque-sans-mono
@@ -59,7 +65,15 @@ in
     #   echo "Hello, ${config.home.username}!"
     # '')
 
+    qbittorrent
     vscode
+    telegram-desktop
+    discord
+    cargo
+    rustc
+    rust-analyzer
+    nixd
+    obsidian
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -81,6 +95,12 @@ in
       /* Hide the horizontal tab bar */
       #TabsToolbar { visibility: collapse !important; }
       '';
+
+    ".config/waybar" = {
+      source = ./applications/waybar;
+      recursive = true;
+      enable = true;
+    };
   };
 
   # Home Manager can also manage your environment variables through
@@ -101,10 +121,10 @@ in
   home.sessionVariables = {
     EDITOR = "nvim";
     # SHELL = "${pkgs.nushell}/bin/nu";
-    SHELL = "${pkgs.zsh}/bin/zsh";
+    # SHELL = "${pkgs.zsh}/bin/zsh";
   };
 
-   programs.nvf = {
+  programs.nvf = {
     enable = true;
     settings = {
       # vim.viAlias = false;
