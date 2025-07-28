@@ -5,7 +5,7 @@
       settings = {
         font = {
           normal = {
-            # family = "JetBrains Mono";
+            family = "JetBrains Mono";
             style = "Regular";
           };
           size = 12.0;

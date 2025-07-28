@@ -7,7 +7,7 @@ in
   imports = [
     ./shells/sh.nix
     ./shells/starship.nix
-    # ./shells/nu.nix
+    ./shells/nu.nix
     ./shells/tmux.nix
     ./shells/zellij.nix
 
@@ -131,6 +131,16 @@ in
       # vim.vimAlias = true;
       vim.lsp = {
         enable = true;
+      };
+    };
+  };
+
+  programs.yazi = {
+    enable = true;
+    settings = {
+      mgr = {
+        show_hidden = true;
+        show_symlink = true;
       };
     };
   };
