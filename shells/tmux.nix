@@ -17,7 +17,7 @@
         plugin = tmuxPlugins.yank;
       }
       {
-        plugin = tmuxPlugins.catppuccin;
+        plugin = tmuxPlugins.tokyo-night-tmux;
       }
       {
         plugin = tmuxPlugins.vim-tmux-navigator;

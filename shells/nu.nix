@@ -37,7 +37,7 @@
     shellAliases = {
       vim = "nvim";
       vi = "hx";
-      cat = "bat";
+      # cat = "bat";
     };
   };
 }

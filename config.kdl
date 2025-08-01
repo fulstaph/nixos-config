@@ -6,6 +6,27 @@
 // Input device configuration.
 // Find the full list of options on the wiki:
 // https://github.com/YaLTeR/niri/wiki/Configuration:-Input
+environment {
+    DISPLAY ":0"
+    NIXOS_OZONE_WL "1"
+}
+
+spawn-at-startup "waybar"
+
+workspace "terminal" {
+}
+
+workspace "browser" {
+    // match at-startup=true app-id=r#"firefox"#
+}
+
+workspace "editor" {
+}
+
+workspace "chat" {
+   // match at-startup=true app-id=r#"^org\.telegram\.desktop$"#
+}
+
 input {
     keyboard {
         xkb {
@@ -13,7 +34,7 @@ input {
             // For more information, see xkeyboard-config(7).
 
             // For example:
-            layout "us,ru"
+            layout "au,ru"
             options "grp:win_space_toggle,compose:ralt,ctrl:nocaps"
 
             // If this section is empty, niri will fetch xkb settings
@@ -267,7 +288,6 @@ layout {
 // See the binds section below for more spawn examples.
 
 // This line starts waybar, a commonly used bar for Wayland compositors.
-spawn-at-startup "waybar"
 
 hotkey-overlay {
     // Uncomment this line to disable the "Important Hotkeys" pop-up at startup.
@@ -359,7 +379,9 @@ binds {
 
     // Suggested binds for running programs: terminal, app launcher, screen locker.
     Mod+T hotkey-overlay-title="Open a Terminal: wezterm" { spawn "wezterm"; }
+    Mod+B hotkey-overlay-title="Open a Browser: firefox" { spawn "firefox"; }
     Mod+D hotkey-overlay-title="Run an Application: fuzzel" { spawn "fuzzel"; }
+    Mod+P hotkey-overlay-title="Run an Application: wofi" { spawn "wofi --show drun"; }
     Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
 
     // You can also use a shell. Do this if you need pipes, multiple commands, etc.

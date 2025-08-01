@@ -1,10 +1,9 @@
 { config, lib, pkgs, ... }:
 
-let
-  inNiri = builtins.getEnv "XDG_SESSION_DESKTOP" == "niri";
-in
 {
   imports = [
+    ./theming.nix
+
     ./shells/sh.nix
     ./shells/starship.nix
     ./shells/nu.nix
@@ -18,8 +17,8 @@ in
     ./applications/terminals/wezterm.nix
     ./applications/terminals/alacritty.nix
     ./applications/editors/helix.nix
-
-    # ./applications/steam.nix
+    ./applications/editors/zed.nix
+    ./applications/waybar.nix
   ];
 
   # Home Manager needs a bit of information about you and the paths it should
@@ -38,25 +37,94 @@ in
 
   services.blueman-applet.enable = true;
 
+  systemd.user.services = {
+    xwayland-satellite = {
+      Unit = {
+        Description = "XWayland satellite";
+        PartOf = ["graphical-session.target"];
+        After = ["graphical-session-pre.target" "niri.service"];
+      };
+      Service = {
+        ExecStart = "${pkgs.xwayland-satellite}/bin/xwayland-satellite";
+        Restart = "on-failure";
+      };
+      Install = {
+        WantedBy = ["graphical-session.target"];
+      };
+    };
+
+    swaybg = {
+      Unit = {
+        Description = "Wallpaper daemon";
+        PartOf = ["graphical-session.target"];
+        After = ["graphical-session-pre.target"];
+      };
+      Service = {
+        ExecStart = "${pkgs.swaybg}/bin/swaybg -i /home/fulstaph/.config/wallpapers/main.jpg -m fill";
+        Restart = "on-failure";
+      };
+      Install = {
+        WantedBy = ["graphical-session.target"];
+      };
+    };
+  };
+
+  services.swayidle = {
+    enable = true;
+    timeouts = [
+      { timeout = 300; command = "${pkgs.swaylock}/bin/swaylock"; }
+      { timeout = 600; command = "systemctl suspend"; }
+    ];
+    events = [
+      { event = "before-sleep"; command = "${pkgs.swaylock}/bin/swaylock"; }
+    ];
+  };
+
+  programs.swaylock = {
+    enable = true;
+    settings = {
+      color = "000000";
+      indicator = true;
+      effect-blur = "7x3";
+      effect-vignette = "0.5:0.5";
+    };
+  };
+
   # The home.packages option allows you to install Nix packages into your
   # environment.
   programs.alacritty.enable = true; # Super+T in the default setting (terminal)
   programs.fuzzel.enable = true; # Super+D in the default setting (app launcher)
-  programs.swaylock.enable = true; # Super+Alt+L in the default setting (screen locker)
-  programs.waybar.enable = true; # launch on startup in the default setting (bar)
+  # programs.swaylock.enable = true; # Super+Alt+L in the default setting (screen locker)
   services.mako.enable = true; # notification daemon
-  services.swayidle.enable = true; # idle management daemon
+  # services.swayidle.enable = true; # idle management daemon
   services.polkit-gnome.enable = true; # polkit
+
+  # fonts
+  fonts.fontconfig.enable = true;
+  fonts.fontconfig.defaultFonts = {
+    monospace = [ "FiraCode Nerd Font" ];
+  };
+
   home.packages = with pkgs; [
     kitty
     swaybg
     brightnessctl
     playerctl
+    btop
+    ripgrep
+    fastfetch
+    drawio
+    wofi
 
-    # Install Nerd Fonts with a limited number of fonts
-    pkgs.nerd-fonts.fantasque-sans-mono
-    pkgs.nerd-fonts.jetbrains-mono
-    pkgs.nerd-fonts.fira-code
+    # Fonts
+    fantasque-sans-mono
+    jetbrains-mono
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.fira-code
+    fira-code
+    font-awesome
+
+    adwaita-icon-theme
 
     # You can also create simple shell scripts directly inside your
     # configuration. For example, this adds a command 'my-hello' to your
@@ -69,11 +137,18 @@ in
     vscode
     telegram-desktop
     discord
+    vlc
+    go
+    gcc
     cargo
     rustc
     rust-analyzer
     nixd
     obsidian
+    bitwig-studio
+
+    # work?
+    microsoft-edge
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -96,11 +171,30 @@ in
       #TabsToolbar { visibility: collapse !important; }
       '';
 
-    ".config/waybar" = {
-      source = ./applications/waybar;
+    ".config/wallpapers" = {
+      source = ./wallpapers;
       recursive = true;
       enable = true;
     };
+
+    ".config/wofi" = {
+      source = ./applications/wofi;
+      recursive = true;
+      enable = true;
+    };
+  };
+
+  xdg.portal = {
+    enable = true;
+    config.common = {
+      default = ["gnome"];
+      "org.freedesktop.impl.portal.FileChooser" = ["termfilechooser"];
+    };
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gnome
+      pkgs.xdg-desktop-portal-termfilechooser
+      pkgs.xdg-desktop-portal-gtk
+    ];
   };
 
   # Home Manager can also manage your environment variables through
@@ -120,7 +214,7 @@ in
   #
   home.sessionVariables = {
     EDITOR = "nvim";
-    # SHELL = "${pkgs.nushell}/bin/nu";
+    SHELL = "${pkgs.nushell}/bin/nu";
     # SHELL = "${pkgs.zsh}/bin/zsh";
   };
 
@@ -146,6 +240,31 @@ in
   };
 
   xdg.configFile."niri/config.kdl".source = ./config.kdl;
+
+  xdg.configFile."fuzzel/fuzzel.ini".text = ''
+    [main]
+    font=Monospace:size=5
+    dpi-aware=yes
+    prompt=❯
+    icon-theme=Adwaita
+    fields=name,generic,comment,categories,filename,keywords
+    show-actions=yes
+    width=20
+    height=50
+
+    [colors]
+    background=1a1b26ff
+    text=c0caf5ff
+    selection=33467Cff
+    selection-text=c0caf5ff
+    selection-match=ff9e64ff
+    border=1a1b26ff
+    match=7aa2f7ff
+
+    [border]
+    width=5
+    radius=20
+  '';
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
