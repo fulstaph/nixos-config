@@ -8,12 +8,12 @@
       mainBar = {
         layer = "top";
         position = "top";
-        height = 30;
+        height = 28;
         spacing = 4;
         
         modules-left = ["niri/workspaces" ]; # "wlr/taskbar"];
         modules-center = ["clock"];
-        modules-right = ["pulseaudio" "network" "cpu" "memory" "battery" "tray"];
+        modules-right = ["pulseaudio" "network" "cpu" "memory" "battery" "niri/language" "tray"];
 
         "niri/language" = {
           format = "{icon} {name}";

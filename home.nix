@@ -143,7 +143,7 @@
     cargo
     rustc
     rust-analyzer
-    nixd
+
     obsidian
     bitwig-studio
 
