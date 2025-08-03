@@ -8,6 +8,8 @@
     ll = "ls -l";
     cat = "bat";
     ".." = "cd ..";
+    grep = "rg";
+    vim = "nvim";
   };
 in {
   programs.bash = {
@@ -18,9 +20,8 @@ in {
   programs.zsh = {
     enable = true;
     shellAliases = myShellAliases;
-    initExtra = ''
-      # Ensure system packages take precedence
-      # export PATH=/run/current-system/sw/bin:$PATH
+    initContent= ''
+      bindkey -v
     '';
   };
 }
