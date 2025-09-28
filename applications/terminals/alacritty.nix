@@ -3,10 +3,21 @@
   programs.alacritty = {
       enable = true;
       settings = {
+        window = {
+          opacity = 0.9;
+        };
         font = {
           normal = {
-            # family = "JetBrains Mono";
+            family = "JetBrainsMono Nerd Font";
             style = "Regular";
+          };
+          bold = {
+            family = "JetBrainsMono Nerd Font";
+            style = "Bold";
+          };
+          italic = {
+            family = "JetBrainsMono Nerd Font";
+            style = "Italic";
           };
           size = 12.0;
         };

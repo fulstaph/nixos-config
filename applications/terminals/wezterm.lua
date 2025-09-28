@@ -16,6 +16,13 @@ config.font = wezterm.font_with_fallback({
 config.font_size = 10.0
 
 -- Set up colour scheme
-config.color_scheme = 'Catppuccin Mocha'
+config.color_scheme = 'TokioNight'
+
+config.window_padding = {
+    left = 0,
+    right = 0,
+    top = 0,
+    bottom = 0,
+}
 
 return config

@@ -71,6 +71,13 @@ in
     variant = "";
   };
 
+  fonts.packages = [
+    pkgs.nerd-fonts.fira-code
+    pkgs.nerd-fonts.jetbrains-mono
+    pkgs.jetbrains-mono
+    pkgs.nerd-fonts.hack
+  ];
+
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
@@ -112,25 +119,18 @@ in
       go
       python3
       vscode
-      ghc
-      cabal-install
-      stack
       virtualbox
       distrobox
       bitwig-studio
       lutris
       wine
       winetricks
-      # latex packages
-      texlive.combined.scheme-full
-      biber
-      pandoc
+
+      anki-bin
+      jetbrains-toolbox
       
       # disk utility
       gparted
-
-      # edge for work?
-      # TODO: delete
       microsoft-edge
     ];
   };
@@ -169,14 +169,16 @@ in
      tmux
      git
      fastfetch
-     firefoxpwa
      zed-editor
      rustup
      cargo
      rust-analyzer
      home-manager
-     wireguard-tools
+     gcc
+     fzf
   ];
+
+  programs.kdeconnect.enable = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -212,5 +214,4 @@ in
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "24.05"; # Did you read the comment?
-
 }

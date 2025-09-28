@@ -4,7 +4,7 @@
     ./shells/sh.nix 
     ./shells/starship.nix
     ./shells/nu.nix
-    ./shells/tmux.nix
+    # ./shells/tmux.nix
     ./shells/zellij.nix
     
     ./cli/bat.nix
