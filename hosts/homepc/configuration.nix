@@ -132,6 +132,7 @@ in
       # disk utility
       gparted
       microsoft-edge
+      zoom
     ];
   };
 
