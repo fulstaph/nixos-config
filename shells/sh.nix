@@ -7,6 +7,7 @@
     ls = "eza --color=always --icons=always";
     ll = "ls -l";
     cat = "bat";
+    c = "clear";
     ".." = "cd ..";
     grep = "rg";
     vim = "nvim";

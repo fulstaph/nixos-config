@@ -20,6 +20,11 @@
       rb = "rebase";
       rs = "reset";
     };
+
+    extraConfig = {
+      core.askPass = "";          # don't use askpass programs
+      credential.helper = "";     # disable GUI credential helpers
+    };
   };
 }
 

@@ -34,7 +34,7 @@ input {
             // For more information, see xkeyboard-config(7).
 
             // For example:
-            layout "au,ru"
+            layout "au,ru,ge"
             options "grp:win_space_toggle,compose:ralt,ctrl:nocaps"
 
             // If this section is empty, niri will fetch xkb settings
@@ -125,6 +125,14 @@ input {
     // If the position is unset or results in an overlap, the output is instead placed
     // automatically.
     position x=1280 y=0
+}
+
+output "HDMI-A-1" {
+    // off
+    mode "3840x2160@120.000"
+    scale 1.5
+    transform "normal"
+    position x=0 y=0
 }
 
 // Settings that influence how windows are positioned and sized.

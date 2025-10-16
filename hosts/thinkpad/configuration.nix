@@ -24,6 +24,9 @@ in {
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
+  hardware.bluetooth.enable = true; # Enable Bluetooth
+  hardware.bluetooth.powerOnBoot = true; # Auto-enable Bluetooth on startup
+
   # Enable networking
   networking.networkmanager.enable = true;
 
@@ -65,7 +68,7 @@ in {
   services.printing.enable = true;
 
   # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -80,8 +83,10 @@ in {
     #media-session.enable = true;
   };
 
+  services.blueman.enable = true; # Bluetooth manager for X11 and Wayland
+
   # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
+  services.libinput.enable = true;
 
   virtualisation.docker.enable = true;
 
@@ -143,6 +148,7 @@ in {
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
+  services.xserver.videoDrivers = [ "amdgpu" ];
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];

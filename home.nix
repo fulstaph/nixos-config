@@ -133,22 +133,30 @@
     #   echo "Hello, ${config.home.username}!"
     # '')
 
+    go
+    gcc
+    jdk23
+    maven
+    gradle
+    cargo
+    rustc
+    rust-analyzer
+    k9s
+    kubectl
+    helm
+
     qbittorrent
     vscode
     telegram-desktop
     discord
     vlc
-    go
-    gcc
-    cargo
-    rustc
-    rust-analyzer
-
     obsidian
     bitwig-studio
+    jetbrains-toolbox
 
     # work?
     microsoft-edge
+    google-chrome
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -214,17 +222,54 @@
   #
   home.sessionVariables = {
     EDITOR = "nvim";
-    SHELL = "${pkgs.nushell}/bin/nu";
-    # SHELL = "${pkgs.zsh}/bin/zsh";
+    # SHELL = "${pkgs.nushell}/bin/nu";
+    SHELL = "${pkgs.zsh}/bin/zsh";
+    JAVA_HOME = "${pkgs.jdk23}";
   };
 
+  # programs.nvf = {
+  #   enable = true;
+  #   settings = {
+  #     # vim.viAlias = false;
+  #     # vim.vimAlias = true;
+  #     vim.lsp = {
+  #       enable = true;
+  #     };
+  #   };
+  # };
+
+# ---- NVF (Neovim Flake) config via Home-Manager ----
+  programs.nvf.enableManpages = true;
   programs.nvf = {
     enable = true;
+
     settings = {
-      # vim.viAlias = false;
-      # vim.vimAlias = true;
-      vim.lsp = {
-        enable = true;
+      vim = {
+        options = {
+          number = true;
+          relativenumber = true;
+          termguicolors = true;
+        };
+
+        theme = { name = "tokyonight"; style = "night"; };
+
+        treesitter.enable = true;   # includes Go grammar
+        telescope.enable  = true;
+
+        lsp = {
+          enable = true;
+          servers = {
+            gopls.enable     = true;  # Go LSP
+            lua-ls.enable    = true;
+            tsserver.enable  = true;
+            pyright.enable   = true;
+          };
+        };
+        # (Optional) handy Go keymaps
+        keymaps = [
+          { mode = "n"; key = "<leader>gr"; action = ":!go run .<CR>"; desc = "go run ."; }
+          { mode = "n"; key = "<leader>gt"; action = ":!go test ./...<CR>"; desc = "go test ./..."; }
+        ];
       };
     };
   };
